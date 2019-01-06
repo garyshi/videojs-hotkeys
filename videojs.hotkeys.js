@@ -28,7 +28,7 @@
     var doc = document;
     var def_options = {
       volumeStep: 0.1,
-      seekStep: 5,
+      seekStep: 60,
       enableMute: true,
       enableVolumeScroll: true,
       enableHoverScroll: true,
@@ -366,23 +366,23 @@
     }
 
     function rewindKey(e) {
-      // Left Arrow or MediaRewind
-      return (e.which === 37 || e.which === 177);
+      // Left Arrow or MediaRewind, Down Arrow, or Page Down
+      return (e.which === 37 || e.which === 177 || e.which == 40 || e.which == 34);
     }
 
     function forwardKey(e) {
-      // Right Arrow or MediaForward
-      return (e.which === 39 || e.which === 176);
+      // Right Arrow or MediaForward, Up Arrow, or Page Up
+      return (e.which === 39 || e.which === 176 || e.which == 38 || e.which == 33);
     }
 
     function volumeUpKey(e) {
-      // Up Arrow
-      return (e.which === 38);
+      // ]
+      return (e.which === 221);
     }
 
     function volumeDownKey(e) {
-      // Down Arrow
-      return (e.which === 40);
+      // [
+      return (e.which === 219);
     }
 
     function muteKey(e) {
@@ -397,7 +397,11 @@
 
     function seekStepD(e) {
       // SeekStep caller, returns an int, or a function returning an int
-      return (typeof seekStep === "function" ? seekStep(e) : seekStep);
+      if (typeof seekStep === "function") return seekStep(e);
+      // Big step: page up, page down
+      if (e.which == 33 || e.witch == 34) return 300;
+      // Tiny step: up arrow, down arrow
+      if (e.which == 38 || e.witch == 40) return 5;
     }
 
     player.on('keydown', keyDown);
